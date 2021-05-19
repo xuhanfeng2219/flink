@@ -61,7 +61,7 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 	 * of {@code Tuple2<Integer, Integer>} is created. The stream is grouped according to the
 	 * first tuple value. Each group is folded where the second tuple value is summed.
 	 *
-	 * <p>This test relies on the hash function used by the {@link DataStream#keyBy}, which is
+	 * <p>This test relies on the hash function used by the , which is
 	 * assumed to be {@link MathUtils#murmurHash}.
 	 */
 	@Test
@@ -75,7 +75,7 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 
 		SplitStream<Tuple2<Integer, Integer>> splittedResult = sourceStream
 			.keyBy(0)
-			.fold(0, new FoldFunction<Tuple2<Integer, Integer>, Integer>() {
+			.fold(0, new FoldFunction<>() {
 				private static final long serialVersionUID = 4875723041825726082L;
 
 				@Override
@@ -86,13 +86,13 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 				private static final long serialVersionUID = 8538355101606319744L;
 				int key = -1;
 				@Override
-				public Tuple2<Integer, Integer> map(Integer value) throws Exception {
+				public Tuple2<Integer, Integer> map(Integer value) {
 					if (key == -1){
 						key = MathUtils.murmurHash(value) % numKeys;
 					}
 					return new Tuple2<>(key, value);
 				}
-			}).split(new OutputSelector<Tuple2<Integer, Integer>>() {
+			}).split(new OutputSelector<>() {
 				private static final long serialVersionUID = -8439325199163362470L;
 
 				@Override
@@ -113,7 +113,7 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 			private static final long serialVersionUID = 2114608668010092995L;
 
 			@Override
-			public Integer map(Tuple2<Integer, Integer> value) throws Exception {
+			public Integer map(Tuple2<Integer, Integer> value) {
 				return value.f1;
 			}
 		}).addSink(sinkFunction1);
@@ -177,14 +177,14 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 			.keyBy(0)
 			.fold(
 				new NonSerializable(42),
-				new FoldFunction<Tuple2<Integer, NonSerializable>, NonSerializable>() {
+				new FoldFunction<>() {
 					private static final long serialVersionUID = 2705497830143608897L;
 
 					@Override
 					public NonSerializable fold(NonSerializable accumulator, Tuple2<Integer, NonSerializable> value) throws Exception {
 						return new NonSerializable(accumulator.value + value.f1.value);
 					}
-			})
+				})
 			.map(new MapFunction<NonSerializable, Integer>() {
 				private static final long serialVersionUID = 6906984044674568945L;
 
@@ -242,13 +242,8 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 
 			@Override
 			public void asyncInvoke(final Tuple2<Integer, NonSerializable> input,
-									final ResultFuture<Integer> resultFuture) throws Exception {
-				executorService.submit(new Runnable() {
-					@Override
-					public void run() {
-						resultFuture.complete(Collections.singletonList(input.f0 + input.f0));
-					}
-				});
+									final ResultFuture<Integer> resultFuture) {
+				executorService.submit(() -> resultFuture.complete(Collections.singletonList(input.f0 + input.f0)));
 			}
 		};
 
@@ -386,12 +381,7 @@ public class StreamingOperatorsITCase extends AbstractTestBase {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		env.getConfig().enableObjectReuse();
 		DataStream<Integer> input = env.fromElements(1, 2, 3);
-		input.flatMap(new FlatMapFunction<Integer, Integer>() {
-			@Override
-			public void flatMap(Integer value, Collector<Integer> out) throws Exception {
-				out.collect(value << 1);
-			}
-		});
+		input.flatMap((FlatMapFunction<Integer, Integer>) (value, out) -> out.collect(value << 1));
 		env.execute();
 	}
 }

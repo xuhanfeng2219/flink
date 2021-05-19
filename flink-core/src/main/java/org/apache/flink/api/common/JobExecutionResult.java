@@ -25,6 +25,7 @@ import org.apache.flink.util.OptionalFailure;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -50,11 +51,7 @@ public class JobExecutionResult extends JobSubmissionResult {
 		super(jobID);
 		this.netRuntime = netRuntime;
 
-		if (accumulators != null) {
-			this.accumulatorResults = accumulators;
-		} else {
-			this.accumulatorResults = Collections.emptyMap();
-		}
+		this.accumulatorResults = Objects.requireNonNullElse(accumulators, Collections.emptyMap());
 	}
 
 	@Override

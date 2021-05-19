@@ -870,9 +870,7 @@ public class ExecutionEnvironment {
 					jobListener -> jobListener.onJobExecuted(lastJobExecutionResult, null));
 
 		} catch (Throwable t) {
-			jobListeners.forEach(jobListener -> {
-				jobListener.onJobExecuted(null, ExceptionUtils.stripExecutionException(t));
-			});
+			jobListeners.forEach(jobListener -> jobListener.onJobExecuted(null, ExceptionUtils.stripExecutionException(t)));
 			ExceptionUtils.rethrowException(t);
 		}
 
@@ -1086,7 +1084,7 @@ public class ExecutionEnvironment {
 
 		// Check plan for GenericTypeInfo's and register the types at the serializers.
 		if (!config.isAutoTypeRegistrationDisabled()) {
-			plan.accept(new Visitor<org.apache.flink.api.common.operators.Operator<?>>() {
+			plan.accept(new Visitor<>() {
 
 				private final Set<Class<?>> registeredTypes = new HashSet<>();
 				private final Set<org.apache.flink.api.common.operators.Operator<?>> visitedOperators = new HashSet<>();
@@ -1102,7 +1100,8 @@ public class ExecutionEnvironment {
 				}
 
 				@Override
-				public void postVisit(org.apache.flink.api.common.operators.Operator<?> visitable) {}
+				public void postVisit(org.apache.flink.api.common.operators.Operator<?> visitable) {
+				}
 			});
 		}
 

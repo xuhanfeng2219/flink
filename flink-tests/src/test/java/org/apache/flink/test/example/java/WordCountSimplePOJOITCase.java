@@ -57,7 +57,7 @@ public class WordCountSimplePOJOITCase extends JavaProgramTestBase implements Se
 		DataSet<WC> counts = text
 				.flatMap(new Tokenizer())
 				.groupBy("word")
-				.reduce(new ReduceFunction<WC>() {
+				.reduce(new ReduceFunction<>() {
 					private static final long serialVersionUID = 1L;
 
 					public WC reduce(WC value1, WC value2) {
