@@ -72,7 +72,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
- * Utility class to encapsulate the logic of building an {@link ExecutionGraph} from a {@link JobGraph}.
+ * Utility class to encapsulate the logic of building
+ * an {@link
+ * } from a {@link JobGraph}.
  */
 public class ExecutionGraphBuilder {
 

@@ -218,7 +218,8 @@ public class MusicProfiles implements ProgramDescription {
 	private static final class CreateSimilarUserEdges implements GroupReduceFunction<Edge<String, Integer>,
 		Edge<String, NullValue>> {
 
-		public void reduce(Iterable<Edge<String, Integer>> edges, Collector<Edge<String, NullValue>> out) {
+		@Override
+        public void reduce(Iterable<Edge<String, Integer>> edges, Collector<Edge<String, NullValue>> out) {
 			List<String> listeners = new ArrayList<>();
 			for (Edge<String, Integer> edge : edges) {
 				listeners.add(edge.getSource());

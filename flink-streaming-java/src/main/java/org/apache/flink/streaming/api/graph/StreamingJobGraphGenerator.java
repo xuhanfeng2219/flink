@@ -149,24 +149,29 @@ public class StreamingJobGraphGenerator {
 		preValidate();
 
 		// make sure that all vertices start immediately
+		// 设置启动模式为所有节点均在一开始就启动
 		jobGraph.setScheduleMode(streamGraph.getScheduleMode());
 
 		// Generate deterministic hashes for the nodes in order to identify them across
 		// submission iff they didn't change.
+		// 为每个节点生成hash id
 		Map<Integer, byte[]> hashes = defaultStreamGraphHasher.traverseStreamGraphAndGenerateHashes(streamGraph);
 
 		// Generate legacy version hashes for backwards compatibility
+		// 为了保持兼容性创建的hash
 		List<Map<Integer, byte[]>> legacyHashes = new ArrayList<>(legacyStreamGraphHashers.size());
 		for (StreamGraphHasher hasher : legacyStreamGraphHashers) {
 			legacyHashes.add(hasher.traverseStreamGraphAndGenerateHashes(streamGraph));
 		}
 
 		Map<Integer, List<Tuple2<byte[], byte[]>>> chainedOperatorHashes = new HashMap<>();
-
+		//生成jobvertex，串成chain等
+		//这里的逻辑大致可以理解为，挨个遍历节点，如果该节点是一个chain的头节点，就生成一个JobVertex，
+		//如果不是头节点，就要把自身配置并入头节点，然后把头节点和自己的出边相连；对于不能chain的节点，当作只有头节点处理即可
 		setChaining(hashes, legacyHashes, chainedOperatorHashes);
-
+		//设置输入边edge
 		setPhysicalEdges();
-
+		//设置slot共享group
 		setSlotSharingAndCoLocation();
 
 		setManagedMemoryFraction(
@@ -175,7 +180,7 @@ public class StreamingJobGraphGenerator {
 			Collections.unmodifiableMap(chainedConfigs),
 			id -> streamGraph.getStreamNode(id).getMinResources(),
 			id -> streamGraph.getStreamNode(id).getManagedMemoryWeight());
-
+		//配置检查点
 		configureCheckpointing();
 
 		jobGraph.setSavepointRestoreSettings(streamGraph.getSavepointRestoreSettings());
@@ -183,6 +188,7 @@ public class StreamingJobGraphGenerator {
 		JobGraphGenerator.addUserArtifactEntries(streamGraph.getUserArtifacts(), jobGraph);
 
 		// set the ExecutionConfig last when it has been finalized
+		// 传递执行环境配置
 		try {
 			jobGraph.setExecutionConfig(streamGraph.getExecutionConfig());
 		}

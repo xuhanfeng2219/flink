@@ -1161,7 +1161,8 @@ public class Graph<K, VV, EV> {
 			this.function = fun;
 		}
 
-		public void reduce(Iterable<Tuple2<K, Edge<K, EV>>> edges, Collector<T> out) throws Exception {
+		@Override
+        public void reduce(Iterable<Tuple2<K, Edge<K, EV>>> edges, Collector<T> out) throws Exception {
 			function.iterateEdges(edges, out);
 		}
 	}
@@ -2084,7 +2085,8 @@ public class Graph<K, VV, EV> {
 			this.function = fun;
 		}
 
-		public void reduce(Iterable<Tuple3<K, Edge<K, EV>, Vertex<K, VV>>> edges, Collector<T> out) throws Exception {
+		@Override
+        public void reduce(Iterable<Tuple3<K, Edge<K, EV>, Vertex<K, VV>>> edges, Collector<T> out) throws Exception {
 			function.iterateNeighbors(edges, out);
 		}
 
