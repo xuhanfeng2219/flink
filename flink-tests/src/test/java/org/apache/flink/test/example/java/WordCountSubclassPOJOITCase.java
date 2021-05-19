@@ -58,21 +58,19 @@ public class WordCountSubclassPOJOITCase extends JavaProgramTestBase implements 
 		DataSet<WCBase> counts = text
 				.flatMap(new Tokenizer())
 				.groupBy("word")
-				.reduce(new ReduceFunction<WCBase>() {
+				.reduce(new ReduceFunction<>() {
 					private static final long serialVersionUID = 1L;
+
 					public WCBase reduce(WCBase value1, WCBase value2) {
 						WC wc1 = (WC) value1;
 						WC wc2 = (WC) value2;
 						return new WC(value1.word, wc1.secretCount + wc2.secretCount);
 					}
 				})
-				.map(new MapFunction<WCBase, WCBase>() {
-					@Override
-					public WCBase map(WCBase value) throws Exception {
-						WC wc = (WC) value;
-						wc.count = wc.secretCount;
-						return wc;
-					}
+				.map((MapFunction<WCBase, WCBase>) value -> {
+					WC wc = (WC) value;
+					wc.count = wc.secretCount;
+					return wc;
 				});
 
 		counts.writeAsText(resultPath);

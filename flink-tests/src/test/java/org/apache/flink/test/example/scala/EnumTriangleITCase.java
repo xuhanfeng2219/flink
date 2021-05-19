@@ -19,7 +19,7 @@
 
 package org.apache.flink.test.example.scala;
 
-import org.apache.flink.examples.scala.graph.EnumTriangles;
+import org.apache.flink.examples.java.graph.EnumTriangles;
 import org.apache.flink.test.testdata.EnumTriangleData;
 import org.apache.flink.test.util.JavaProgramTestBase;
 

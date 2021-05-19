@@ -1490,7 +1490,7 @@ public abstract class DataSet<T> {
 	 * @see TextOutputFormat
 	 */
 	public DataSink<T> writeAsText(String filePath) {
-		return output(new TextOutputFormat<T>(new Path(filePath)));
+		return output(new TextOutputFormat<>(new Path(filePath)));
 	}
 
 	/**
@@ -1708,7 +1708,7 @@ public abstract class DataSet<T> {
 	@Deprecated
 	@PublicEvolving
 	public DataSink<T> print(String sinkIdentifier) {
-		return output(new PrintingOutputFormat<T>(sinkIdentifier, false));
+		return output(new PrintingOutputFormat<>(sinkIdentifier, false));
 	}
 
 	/**
@@ -1724,7 +1724,7 @@ public abstract class DataSet<T> {
 	@Deprecated
 	@PublicEvolving
 	public DataSink<T> printToErr(String sinkIdentifier) {
-		return output(new PrintingOutputFormat<T>(sinkIdentifier, true));
+		return output(new PrintingOutputFormat<>(sinkIdentifier, true));
 	}
 
 	/**
