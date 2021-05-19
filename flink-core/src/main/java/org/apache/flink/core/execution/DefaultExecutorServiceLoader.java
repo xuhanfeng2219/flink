@@ -56,12 +56,10 @@ public class DefaultExecutorServiceLoader implements PipelineExecutorServiceLoad
 		checkNotNull(configuration);
 
 		final List<PipelineExecutorFactory> compatibleFactories = new ArrayList<>();
-		final Iterator<PipelineExecutorFactory> factories = defaultLoader.iterator();
-		while (factories.hasNext()) {
+		for (PipelineExecutorFactory pipelineExecutorFactory : defaultLoader) {
 			try {
-				final PipelineExecutorFactory factory = factories.next();
-				if (factory != null && factory.isCompatibleWith(configuration)) {
-					compatibleFactories.add(factory);
+				if (pipelineExecutorFactory != null && pipelineExecutorFactory.isCompatibleWith(configuration)) {
+					compatibleFactories.add(pipelineExecutorFactory);
 				}
 			} catch (Throwable e) {
 				if (e.getCause() instanceof NoClassDefFoundError) {
