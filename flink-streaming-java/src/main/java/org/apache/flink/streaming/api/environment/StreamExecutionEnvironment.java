@@ -1645,9 +1645,7 @@ public class StreamExecutionEnvironment {
 
 			return jobExecutionResult;
 		} catch (Throwable t) {
-			jobListeners.forEach(jobListener -> {
-				jobListener.onJobExecuted(null, ExceptionUtils.stripExecutionException(t));
-			});
+			jobListeners.forEach(jobListener -> jobListener.onJobExecuted(null, ExceptionUtils.stripExecutionException(t)));
 			ExceptionUtils.rethrowException(t);
 
 			// never reached, only make javac happy

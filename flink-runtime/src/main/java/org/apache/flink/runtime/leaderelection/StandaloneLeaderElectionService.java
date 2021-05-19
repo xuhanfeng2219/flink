@@ -39,12 +39,14 @@ public class StandaloneLeaderElectionService implements LeaderElectionService {
 	public void start(LeaderContender newContender) throws Exception {
 		if (contender != null) {
 			// Service was already started
+			// 服务已经开始
 			throw new IllegalArgumentException("Leader election service cannot be started multiple times.");
 		}
 
 		contender = Preconditions.checkNotNull(newContender);
 
 		// directly grant leadership to the given contender
+		//直接授予给定竞争者的领导权
 		contender.grantLeadership(HighAvailabilityServices.DEFAULT_LEADER_ID);
 	}
 

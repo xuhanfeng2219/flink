@@ -55,6 +55,8 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 /**
  * The runner for the job manager. It deals with job level leader election and make underlying job manager
  * properly reacted.
+ *
+ * 工作管理者。 它处理职位级别的领导者选举，并使底层的职位经理做出正确的反应。
  */
 public class JobManagerRunnerImpl implements LeaderContender, OnCompletionActions, JobManagerRunner {
 

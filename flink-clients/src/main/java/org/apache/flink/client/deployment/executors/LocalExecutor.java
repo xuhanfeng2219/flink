@@ -82,7 +82,7 @@ public class LocalExecutor implements PipelineExecutor {
 			final int slotsPerTaskManager = configuration.getInteger(
 					TaskManagerOptions.NUM_TASK_SLOTS, plan.getMaximumParallelism());
 			final int numTaskManagers = configuration.getInteger(
-					ConfigConstants.LOCAL_NUMBER_TASK_MANAGER, 1);
+				ConfigConstants.LOCAL_NUMBER_TASK_MANAGER, 1);
 
 			plan.setDefaultParallelism(slotsPerTaskManager * numTaskManagers);
 		}
