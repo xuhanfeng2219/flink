@@ -788,6 +788,17 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		actionExecutor.runThrowing(() -> operatorChain.broadcastCheckpointCancelMarker(checkpointId));
 	}
 
+	/**
+	 * 如果task还在运行，那就可以进行checkpoint。方法是先向下游所有出口广播一个Barrier，然后触发本task的State保存。
+	 * 如果task结束了，那我们就要通知下游取消本次checkpoint，方法是发送一个CancelCheckpointMarker，这是类似于Barrier的另一种消息。
+	 * 注意，从这里开始，整个执行链路上开始出现Barrier，可以和前面讲Fault Tolerant原理的地方结合看一下。
+	 * @param checkpointMetaData
+	 * @param checkpointOptions
+	 * @param checkpointMetrics
+	 * @param advanceToEndOfTime
+	 * @return
+	 * @throws Exception
+	 */
 	private boolean performCheckpoint(
 			CheckpointMetaData checkpointMetaData,
 			CheckpointOptions checkpointOptions,
@@ -1306,6 +1317,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			startSyncPartNano = System.nanoTime();
 
 			try {
+				//这里，就是调用StreamOperator进行snapshotState的入口方法
 				for (StreamOperatorWrapper<?, ?> operatorWrapper : operatorChain.getAllOperators(true)) {
 					checkpointStreamOperator(operatorWrapper.getStreamOperator());
 				}
@@ -1328,6 +1340,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 					startAsyncPartNano);
 
 				owner.cancelables.registerCloseable(asyncCheckpointRunnable);
+				//这里注册了一个Runnable，在执行完checkpoint之后向JobManager发出CompletedCheckPoint消息，这也是fault tolerant两阶段提交的一部分
 				owner.asyncOperationsThreadPool.execute(asyncCheckpointRunnable);
 
 				if (LOG.isDebugEnabled()) {
