@@ -174,7 +174,7 @@ public class DistributedCache {
 			return Collections.emptySet();
 		}
 
-		Map<String, DistributedCacheEntry> cacheFiles = new HashMap<String, DistributedCacheEntry>();
+		Map<String, DistributedCacheEntry> cacheFiles = new HashMap<>();
 		for (int i = 1; i <= num; i++) {
 			String name = conf.getString(CACHE_FILE_NAME + i, null);
 			String filePath = conf.getString(CACHE_FILE_PATH + i, null);
