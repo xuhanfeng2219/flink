@@ -395,9 +395,9 @@ public class WebLogData {
 
 	public static DataSet<Tuple2<String, String>> getDocumentDataSet(ExecutionEnvironment env) {
 
-		List<Tuple2<String, String>> data = new ArrayList<Tuple2<String, String>>(100);
+		List<Tuple2<String, String>> data = new ArrayList<>(100);
 		for (Object [] document : DOCUMENTS) {
-			data.add(new Tuple2<String, String>((String) document[0], (String) document[1]));
+			data.add(new Tuple2<>((String) document[0], (String) document[1]));
 		}
 
 		return env.fromCollection(data);
@@ -405,19 +405,19 @@ public class WebLogData {
 
 	public static DataSet<Tuple3<Integer, String, Integer>> getRankDataSet(ExecutionEnvironment env) {
 
-		List<Tuple3<Integer, String, Integer>> data = new ArrayList<Tuple3<Integer, String, Integer>>(100);
+		List<Tuple3<Integer, String, Integer>> data = new ArrayList<>(100);
 		for (Object [] rank : RANKS) {
-			data.add(new Tuple3<Integer, String, Integer>((Integer) rank[0], (String) rank[1], (Integer) rank[2]));
+			data.add(new Tuple3<>((Integer) rank[0], (String) rank[1], (Integer) rank[2]));
 		}
 		return env.fromCollection(data);
 	}
 
 	public static DataSet<Tuple2<String, String>> getVisitDataSet(ExecutionEnvironment env) {
 
-		List<Tuple2<String, String>> data = new ArrayList<Tuple2<String, String>>(100);
+		List<Tuple2<String, String>> data = new ArrayList<>(100);
 
 		for (Object [] visit : VISITS) {
-			data.add(new Tuple2<String, String>((String) visit[0], (String) visit[1]));
+			data.add(new Tuple2<>((String) visit[0], (String) visit[1]));
 		}
 		return env.fromCollection(data);
 
