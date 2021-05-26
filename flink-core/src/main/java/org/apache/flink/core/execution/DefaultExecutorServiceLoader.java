@@ -20,7 +20,6 @@ package org.apache.flink.core.execution;
 
 import org.apache.flink.annotation.Internal;
 import org.apache.flink.configuration.Configuration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +55,12 @@ public class DefaultExecutorServiceLoader implements PipelineExecutorServiceLoad
 		checkNotNull(configuration);
 
 		final List<PipelineExecutorFactory> compatibleFactories = new ArrayList<>();
-		for (PipelineExecutorFactory pipelineExecutorFactory : defaultLoader) {
+		final Iterator<PipelineExecutorFactory> factories = defaultLoader.iterator();
+		while (factories.hasNext()) {
 			try {
-				if (pipelineExecutorFactory != null && pipelineExecutorFactory.isCompatibleWith(configuration)) {
-					compatibleFactories.add(pipelineExecutorFactory);
+				final PipelineExecutorFactory factory = factories.next();
+				if (factory != null && factory.isCompatibleWith(configuration)) {
+					compatibleFactories.add(factory);
 				}
 			} catch (Throwable e) {
 				if (e.getCause() instanceof NoClassDefFoundError) {
