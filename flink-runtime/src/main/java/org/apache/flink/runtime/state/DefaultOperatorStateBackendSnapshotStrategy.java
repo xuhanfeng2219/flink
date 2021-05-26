@@ -105,7 +105,7 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 		}
 
 		AsyncSnapshotCallable<SnapshotResult<OperatorStateHandle>> snapshotCallable =
-			new AsyncSnapshotCallable<SnapshotResult<OperatorStateHandle>>() {
+			new AsyncSnapshotCallable<>() {
 
 				@Override
 				protected SnapshotResult<OperatorStateHandle> callInternal() throws Exception {
